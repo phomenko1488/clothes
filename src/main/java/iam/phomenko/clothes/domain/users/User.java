@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private boolean isEnabled;
+    private String email;
 
     @OneToMany
     private List<Collection> collections;

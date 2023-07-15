@@ -14,8 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users")
-public class PaymentRequest {
+@Table(name = "payouts")
+public class Payout {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +27,5 @@ public class PaymentRequest {
 
     private BigDecimal amount;
 
-    private String receiverCard;
+    private String destination;
 }
