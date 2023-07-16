@@ -1,14 +1,15 @@
 package iam.phomenko.clothes.service;
 
 import iam.phomenko.clothes.domain.clothes.Clothes;
+import iam.phomenko.clothes.dto.clothes.CreateClothesDTO;
 import iam.phomenko.clothes.exception.CollectionDontExistException;
 import org.springframework.security.core.Authentication;
 
-import java.math.BigDecimal;
-import java.util.List;
+import javax.persistence.EntityNotFoundException;
 
 public interface ClothesService {
-    Clothes create(String name, String collectionId, List<String> photos, BigDecimal price, Authentication authentication) throws CollectionDontExistException;
+    Clothes create(CreateClothesDTO dto, Authentication authentication) throws CollectionDontExistException;
 
-    Clothes getById(String id);
+    Clothes getById(String id) throws EntityNotFoundException;
+
 }

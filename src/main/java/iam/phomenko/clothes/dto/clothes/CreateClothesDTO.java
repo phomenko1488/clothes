@@ -1,33 +1,18 @@
-package iam.phomenko.clothes.domain.clothes;
-
+package iam.phomenko.clothes.dto.clothes;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Entity
-@Table(name = "clothes")
-public class Clothes {
-    @Id
-    private String id;
-
-
+public class CreateClothesDTO {
     private String name;
-
+    private String collectionId;
     private BigDecimal price;
-
-    @ManyToOne
-    private Collection collection;
-
-    @ElementCollection
     private List<String> photos;
-
 }

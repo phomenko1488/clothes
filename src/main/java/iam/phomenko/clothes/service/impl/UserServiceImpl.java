@@ -23,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -68,7 +69,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getById(String id) {
-        return userRepository.getById(id);
+        User user = userRepository.getById(id);
+        if (user == null)
+            throw new EntityNotFoundException("User with such id doesn't exists");
+        return user;
     }
 
     @Override

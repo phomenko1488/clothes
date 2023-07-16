@@ -35,6 +35,7 @@ public class User implements UserDetails {
     private Role role;
 
     private BigDecimal balance;
+    private BigDecimal blockedBalance;
 
     @Override
     public java.util.Collection<? extends GrantedAuthority> getAuthorities() {
@@ -65,4 +66,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return isEnabled;
     }
+
+
 }

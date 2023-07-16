@@ -6,7 +6,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8081/api/v1/collections/edb1f964-668a-4327-87d2-8946526f93a5
+GET http://localhost:8081/api/v1/collections/795f724f-2320-4546-99fd-e03cea3a238e
 
 
 ###
