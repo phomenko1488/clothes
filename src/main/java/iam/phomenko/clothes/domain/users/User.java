@@ -20,11 +20,12 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    private Long id;
+    private String id;
 
     private String username;
     private String password;
     private boolean isEnabled;
+    private boolean isActivated;
     private String email;
 
     @OneToMany

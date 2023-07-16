@@ -17,8 +17,7 @@ import java.util.Date;
 @Table(name = "payouts")
 public class Payout {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private Date creationDate;
 

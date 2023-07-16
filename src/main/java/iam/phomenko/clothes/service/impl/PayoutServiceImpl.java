@@ -7,6 +7,7 @@ import iam.phomenko.clothes.exception.NoSuchMoneyException;
 import iam.phomenko.clothes.repository.PayoutRepository;
 import iam.phomenko.clothes.service.PayoutService;
 import iam.phomenko.clothes.service.UserService;
+import iam.phomenko.clothes.utils.Generator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,17 @@ import java.util.Date;
 public class PayoutServiceImpl implements PayoutService {
     private final PayoutRepository repository;
     private final UserService userService;
+    private final Generator generator;
 
     @Autowired
-    public PayoutServiceImpl(PayoutRepository repository, UserService userService) {
+    public PayoutServiceImpl(PayoutRepository repository, UserService userService, Generator generator) {
         this.repository = repository;
         this.userService = userService;
+        this.generator = generator;
     }
 
     @Override
-    public Payout getById(Long id) {
+    public Payout getById(String  id) {
         return repository.getPayoutById(id);
     }
 
@@ -41,6 +44,7 @@ public class PayoutServiceImpl implements PayoutService {
             throw new NoSuchMoneyException();
         Payout payout = new Payout();
         payout.setAmount(amount);
+        payout.setId(generator.generateId());
         payout.setDestination(destination);
         payout.setStatus(PaymentRequestStatus.CREATED);
         payout.setCreationDate(Date.from(Instant.now()));

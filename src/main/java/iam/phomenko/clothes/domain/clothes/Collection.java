@@ -17,12 +17,11 @@ import java.util.List;
 public class Collection {
 
     @Id
-    private Long id;
+    private String id;
 
     private String name;
     @ManyToOne
     private User creator;
     @OneToMany
     private List<Clothes> clothesList;
-
 }

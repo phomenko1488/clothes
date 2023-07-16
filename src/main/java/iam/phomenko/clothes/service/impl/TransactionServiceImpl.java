@@ -16,7 +16,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction getById(Long id) {
+    public Transaction getById(String id) {
         return repository.getTransactionById(id);
     }
 }

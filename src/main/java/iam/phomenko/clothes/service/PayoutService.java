@@ -8,6 +8,6 @@ import javax.security.auth.login.CredentialExpiredException;
 import java.math.BigDecimal;
 
 public interface PayoutService {
-    Payout getById(Long id);
+    Payout getById(String id);
     Payout create(Authentication authentication, BigDecimal amount, String destination) throws CredentialExpiredException, NoSuchMoneyException;
 }

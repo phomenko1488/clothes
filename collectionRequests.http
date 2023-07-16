@@ -1,0 +1,12 @@
+POST http://localhost:8081/api/v1/collections
+Content-Type: application/json
+
+{
+  "name": "aboba"
+}
+
+###
+GET http://localhost:8081/api/v1/collections/edb1f964-668a-4327-87d2-8946526f93a5
+
+
+###

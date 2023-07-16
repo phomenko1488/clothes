@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface ClothesService {
-    Clothes create(String name, Long collectionId, List<String> photos, BigDecimal price, Authentication authentication) throws CollectionDontExistException;
+    Clothes create(String name, String collectionId, List<String> photos, BigDecimal price, Authentication authentication) throws CollectionDontExistException;
 
-    Clothes getById(Long id);
+    Clothes getById(String id);
 }

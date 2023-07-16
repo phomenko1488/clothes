@@ -1,77 +1,100 @@
 package iam.phomenko.clothes.config;
 
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import iam.phomenko.clothes.config.jwt.AuthEntryPointJwt;
+import iam.phomenko.clothes.config.jwt.AuthTokenFilter;
+import iam.phomenko.clothes.config.jwt.JwtUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+@EnableGlobalMethodSecurity(
+        // securedEnabled = true,
+        // jsr250Enabled = true,
+        prePostEnabled = true)
+public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
+
+    private final AuthEntryPointJwt unauthorizedHandler;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-//                .antMatchers(USER_ONLY_URLS)
-//                .hasRole("USER")
-//                .antMatchers(HttpMethod.POST,"/createUser")
-//                .hasAuthority("CREATE_USERS")
-//                .antMatchers("/entity**", "/entity/*")
-//                .hasRole("OWNER")
-//                .antMatchers("/transactions**", "/transactions/*")
-//                .hasAuthority("TRANSACTIONS_READ")
-//                .antMatchers("/requests**", "/requests/*")
-//                .hasAuthority("REQUESTS_READ")
-//                .antMatchers("/requests/close")
-//                .hasAuthority("REQUESTS_EDIT")
-//                .antMatchers("/wallets**", "/wallets/*")
-//                .hasAuthority("WALLETS_READ")
-//                .antMatchers("/users**", "/users/*")
-//                .hasAuthority("USERS_READ")
-//                .antMatchers("/users/changeUserEnabled", "/users/removePermission")
-//                .hasAuthority("USERS_EDIT")
-//                .antMatchers("/users/createUser")
-//                .hasAuthority("USERS_CREATE")
-                .antMatchers("/css/*","/js/*")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling().accessDeniedPage("/forbidden")
-                .and()
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        .defaultSuccessUrl("/", true)
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .permitAll()
-                );
-    }
-
-
-    public WebSecurityConfig(UserDetailsService userDetailsService) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler, JwtUtils jwtUtils) {
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.passwordEncoder =new BCryptPasswordEncoder();
+        this.jwtUtils = jwtUtils;
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
-    @Override
-    protected UserDetailsService userDetailsService() {
-        return userDetailsService;
+//  @Override
+//  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+//    authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//  }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+
+        return authProvider;
     }
+
+//  @Bean
+//  @Override
+//  public AuthenticationManager authenticationManagerBean() throws Exception {
+//    return super.authenticationManagerBean();
+//  }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.cors().and().csrf().disable()
+      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeRequests()
+            .antMatchers("/api/v1/user/**","/api/v1/fundraising/**").authenticated()
+            .antMatchers("/api/v1/auth/**","/api/v1/activation**").permitAll()
+            .anyRequest().authenticated();
+
+    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+  }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.cors().and().csrf().disable()
+//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+//                .antMatchers("/api/test/**").permitAll()
+//                .anyRequest().authenticated();
+//
+//        http.authenticationProvider(authenticationProvider());
+//
+//        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
 }
