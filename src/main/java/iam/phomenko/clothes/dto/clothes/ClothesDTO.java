@@ -15,12 +15,12 @@ public class ClothesDTO {
     private String id;
     private String name;
     private BigDecimal price;
-    private List<String > photos;
+    private List<String> photos;
 
     public ClothesDTO(Clothes clothes) {
         this.id = clothes.getId();
         this.name = clothes.getName();
         this.price = clothes.getPrice();
-        this.photos=clothes.getPhotos();
+        this.photos = clothes.getPhotos();
     }
 }

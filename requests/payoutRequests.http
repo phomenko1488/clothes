@@ -1,0 +1,13 @@
+POST http://localhost:8081/api/v1/payouts
+Content-Type: application/json
+
+{
+  "destination": "5375414107239483",
+  "amount": "0"
+}
+
+###
+GET http://localhost:8081/api/v1/payouts/5dd9169a-e777-49dc-aaae-89901098f1fd
+
+
+###

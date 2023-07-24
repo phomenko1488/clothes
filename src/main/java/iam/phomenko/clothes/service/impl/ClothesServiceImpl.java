@@ -5,6 +5,7 @@ import iam.phomenko.clothes.domain.clothes.Collection;
 import iam.phomenko.clothes.domain.users.User;
 import iam.phomenko.clothes.dto.clothes.CreateClothesDTO;
 import iam.phomenko.clothes.exception.CollectionDontExistException;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.repository.ClothesRepository;
 import iam.phomenko.clothes.service.ClothesService;
 import iam.phomenko.clothes.service.CollectionService;
@@ -35,13 +36,15 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public Clothes create(CreateClothesDTO dto, Authentication authentication) throws CollectionDontExistException {
-        log.info(dto.toString());
         User creator = userService.getUserByAuthentication(authentication);
         if (creator == null)
             throw new CredentialsExpiredException("You are logged out");
-        Collection collection = collectionService.getById(dto.getCollectionId());
-        if (collection == null)
+        Collection collection;
+        try {
+            collection = collectionService.getById(dto.getCollectionId());
+        } catch (DomainNotFoundException e) {
             throw new CollectionDontExistException("Collection dont exists");
+        }
         if (!creator.equals(collection.getCreator()))
             throw new AccessDeniedException("It's not your collection");
         Clothes clothes = new Clothes();
@@ -50,11 +53,17 @@ public class ClothesServiceImpl implements ClothesService {
         clothes.setPhotos(dto.getPhotos());
         clothes.setCollection(collection);
         clothes.setPrice(dto.getPrice());
-        return clothesRepository.save(clothes);
+        clothes = clothesRepository.save(clothes);
+        collection.getClothesList().add(clothes);
+        collectionService.save(collection);
+        return clothes;
     }
 
     @Override
-    public Clothes getById(String id) {
-        return clothesRepository.getById(id);
+    public Clothes getById(String id) throws DomainNotFoundException {
+        Clothes clothes = clothesRepository.getClothesById(id);
+        if (clothes == null)
+            throw new DomainNotFoundException("Clothes with such id doesn't exists");
+        return clothes;
     }
 }

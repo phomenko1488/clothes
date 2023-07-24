@@ -1,5 +1,6 @@
 package iam.phomenko.clothes.domain.users;
 
+import iam.phomenko.clothes.domain.cart.CartItem;
 import iam.phomenko.clothes.domain.clothes.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class User implements UserDetails {
 
     private BigDecimal balance;
     private BigDecimal blockedBalance;
+
 
     @Override
     public java.util.Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,0 +1,41 @@
+POST http://localhost:8081/api/v1/cart
+Content-Type: application/json
+
+{
+  "size": "L",
+  "itemId": "23f7011c-e908-45d6-9e1f-e8e354b86bbb",
+  "amount": "1"
+}
+
+###
+GET http://localhost:8081/api/v1/cart
+Content-Type: application/json
+
+{}
+
+###
+GET http://localhost:8081/api/v1/cart/edit
+Content-Type: application/json
+
+{
+  "size": "XL",
+  "isSizeEdited": "true",
+  "itemId": "8bad7a26-a22f-478d-9aed-a9a46785a038",
+  "amount": "1"
+}
+
+
+###
+GET http://localhost:8081/api/v1/cart
+Content-Type: application/json
+
+{
+  "size": "L",
+  "itemId": "8bad7a26-a22f-478d-9aed-a9a46785a038"
+}
+
+###
+GET http://localhost:8081/api/v1/cart/clear
+Content-Type: application/json
+
+###

@@ -2,11 +2,11 @@ POST http://localhost:8081/api/v1/collections
 Content-Type: application/json
 
 {
-  "name": "aboba"
+  "name": "first"
 }
 
 ###
-GET http://localhost:8081/api/v1/collections/795f724f-2320-4546-99fd-e03cea3a238e
+GET http://localhost:8081/api/v1/collections/116e7410-793e-41d3-b803-9017731d47e9
 
 
 ###

@@ -7,6 +7,7 @@ import iam.phomenko.clothes.domain.users.User;
 import iam.phomenko.clothes.dto.auth.SignUpDTO;
 import iam.phomenko.clothes.dto.user.EmailExistDTO;
 import iam.phomenko.clothes.dto.user.UsernameExistDTO;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.exception.EmailExistException;
 import iam.phomenko.clothes.exception.UsernameExistException;
 import iam.phomenko.clothes.repository.ActivationRepository;
@@ -23,7 +24,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setEnabled(true);
         user.setActivated(false);
         user.setBalance(BigDecimal.ZERO);
+        user.setBlockedBalance(BigDecimal.ZERO);
         user.setRole(new Role(1L, "ROLE_USER"));
         user.setEmail(dto.getEmail().trim());
         user.setUsername(dto.getUsername().trim());
@@ -68,10 +69,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getById(String id) {
-        User user = userRepository.getById(id);
+    public User getById(String id) throws DomainNotFoundException {
+        User user = userRepository.getUserById(id);
         if (user == null)
-            throw new EntityNotFoundException("User with such id doesn't exists");
+            throw new DomainNotFoundException("User with such id doesn't exists");
         return user;
     }
 

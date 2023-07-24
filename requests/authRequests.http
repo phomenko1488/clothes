@@ -2,19 +2,19 @@ POST http://localhost:8081/api/v1/auth/signup
 Content-Type: application/json
 
 {
-  "email": "ivan2001.forever@gmail.com",
-  "username": "abobus",
-  "password": "bebra4"
+  "email": "vsratushkin@gmail.com",
+  "username": "owner",
+  "password": "owner"
 }
 ###
-GET http://localhost:8081/api/v1/activation?link=b07590e8-709a-46b6-9bd1-be6b0e9bf6ac
+GET http://localhost:8081/api/v1/activation?link=09b3323d-3b5d-4aa5-9fc6-c7f5e51ccd7f
 ###
 POST http://localhost:8081/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "username": "abobus",
-  "password": "bebra4"
+  "username": "owner",
+  "password": "owner"
 }
 
 ###

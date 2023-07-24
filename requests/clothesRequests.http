@@ -3,13 +3,13 @@ Content-Type: application/json
 
 {
   "name": "aboba",
-  "collectionId": "edb1f964-668a-4327-87d2-8946526f93a5",
+  "collectionId": "404e7417-2604-4632-9c78-0a178abf2d7f",
   "price": 1399.3,
   "photos": ["1","2","3"]
 }
 
 ###
-GET http://localhost:8081/api/v1/clothes/c0e27f33-1edc-408a-8da4-b2db4c2e1ac
+GET http://localhost:8081/api/v1/clothes/23f7011c-e908-45d6-9e1f-e8e354b86bbb
 
 
 ###

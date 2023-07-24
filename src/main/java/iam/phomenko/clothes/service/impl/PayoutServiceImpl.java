@@ -4,6 +4,7 @@ import iam.phomenko.clothes.domain.payments.Payout;
 import iam.phomenko.clothes.domain.users.User;
 import iam.phomenko.clothes.dto.payout.PayoutCreateDTO;
 import iam.phomenko.clothes.enums.PaymentRequestStatus;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.exception.NoSuchMoneyException;
 import iam.phomenko.clothes.repository.PayoutRepository;
 import iam.phomenko.clothes.service.PayoutService;
@@ -32,17 +33,20 @@ public class PayoutServiceImpl implements PayoutService {
     }
 
     @Override
-    public Payout getById(String id) {
-        return repository.getPayoutById(id);
+    public Payout getById(String id) throws DomainNotFoundException {
+        Payout payout = repository.getPayoutById(id);
+        if (payout==null)
+            throw new DomainNotFoundException("Payout with such id doesn't exists");
+        return payout;
     }
 
     @Override
     public Payout create(PayoutCreateDTO dto, Authentication authentication) throws CredentialExpiredException, NoSuchMoneyException {
         User creator = userService.getUserByAuthentication(authentication);
         if (creator == null)
-            throw new CredentialExpiredException("");
+            throw new CredentialExpiredException("Your session was expired");
         if (creator.getBalance().floatValue() < dto.getAmount().floatValue())
-            throw new NoSuchMoneyException();
+            throw new NoSuchMoneyException("You have not enough money");
         Payout payout = new Payout();
         payout.setId(generator.generateId());
         payout.setAmount(dto.getAmount());
@@ -52,6 +56,6 @@ public class PayoutServiceImpl implements PayoutService {
         creator.setBalance(BigDecimal.valueOf(creator.getBalance().floatValue() - payout.getAmount().floatValue()));
         creator.setBlockedBalance(BigDecimal.valueOf(creator.getBlockedBalance().floatValue() + payout.getAmount().floatValue()));
         userService.save(creator);
-        return payout;
+        return repository.save(payout);
     }
 }

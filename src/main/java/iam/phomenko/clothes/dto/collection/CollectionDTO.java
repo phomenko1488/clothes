@@ -18,13 +18,11 @@ import java.util.stream.Collectors;
 public class CollectionDTO {
     private String id;
     private String name;
-    private UserDTO creator;
     private List<ClothesDTO> clothesList;
 
     public CollectionDTO(Collection collection) {
-        this.id= collection.getId();
-        this.name= collection.getName();
-        this.creator= new UserDTO(collection.getCreator());
+        this.id = collection.getId();
+        this.name = collection.getName();
         this.clothesList = collection.getClothesList().stream().parallel().map(ClothesDTO::new).collect(Collectors.toList());
     }
 }

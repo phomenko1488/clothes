@@ -3,6 +3,7 @@ package iam.phomenko.clothes.controller;
 import iam.phomenko.clothes.domain.users.User;
 import iam.phomenko.clothes.dto.pojo.ErrorDTO;
 import iam.phomenko.clothes.dto.user.UserDTO;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class UserController {
     public ResponseEntity<Object> getUserById(@PathVariable("id") String id) {
         try {
             return ResponseEntity.ok().body(new UserDTO(userService.getById(id)));
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        } catch (Exception | DomainNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }
 }

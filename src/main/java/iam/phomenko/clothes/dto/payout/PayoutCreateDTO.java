@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PayoutCreateDTO {
-    private String userId;
     private BigDecimal amount;
     private String destination;
 

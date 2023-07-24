@@ -2,6 +2,7 @@ package iam.phomenko.clothes.controller;
 
 import iam.phomenko.clothes.dto.payout.PayoutCreateDTO;
 import iam.phomenko.clothes.dto.pojo.ErrorDTO;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.exception.NoSuchMoneyException;
 import iam.phomenko.clothes.service.PayoutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class PayoutController {
         try {
 
             return ResponseEntity.ok().body(payoutService.getById(id));
-        } catch (Exception e) {
+        } catch (Exception | DomainNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }
@@ -37,7 +38,7 @@ public class PayoutController {
         try {
             return ResponseEntity.ok().body(payoutService.create(dto, authentication));
         } catch (CredentialExpiredException | NoSuchMoneyException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }
 }

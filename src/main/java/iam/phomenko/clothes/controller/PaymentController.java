@@ -2,6 +2,8 @@ package iam.phomenko.clothes.controller;
 
 import iam.phomenko.clothes.domain.payments.Payment;
 import iam.phomenko.clothes.dto.payment.PaymentDTO;
+import iam.phomenko.clothes.dto.pojo.ErrorDTO;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.service.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +22,8 @@ public class PaymentController {
     public ResponseEntity<Object> getById(@PathVariable("id") String id) {
         try {
             return ResponseEntity.ok().body(new PaymentDTO(paymentService.getById(id)));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new Error(e.getMessage()));
+        } catch (Exception | DomainNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }
 }

@@ -2,6 +2,7 @@ package iam.phomenko.clothes.controller;
 
 import iam.phomenko.clothes.dto.pojo.ErrorDTO;
 import iam.phomenko.clothes.dto.transaction.TransactionDTO;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class TransactionController {
     public ResponseEntity<Object> getById(@PathVariable("id") String id) {
         try {
             return ResponseEntity.ok().body(new TransactionDTO(transactionService.getById(id)));
-        } catch (Exception e) {
+        } catch (Exception | DomainNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }

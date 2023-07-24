@@ -6,6 +6,7 @@ import iam.phomenko.clothes.dto.clothes.ClothesDTO;
 import iam.phomenko.clothes.dto.pojo.ErrorDTO;
 import iam.phomenko.clothes.dto.pojo.SuccessDTO;
 import iam.phomenko.clothes.exception.CollectionDontExistException;
+import iam.phomenko.clothes.exception.DomainNotFoundException;
 import iam.phomenko.clothes.service.ClothesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class ClothesController {
     public ResponseEntity<Object> getById(@PathVariable("id") String id) {
         try {
             return ResponseEntity.ok().body(new ClothesDTO(clothesService.getById(id)));
-        } catch (Exception e) {
+        } catch (Exception | DomainNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
     }
